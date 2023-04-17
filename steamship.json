@@ -1,0 +1,43 @@
+{
+	"type": "package",
+	"handle": "baby_agi",
+	"version": "0.0.5-rc.20",
+	"description": "Deploy your LangChain chatbots to Telegram.",
+	"author": "",
+	"entrypoint": "Unused",
+	"public": false,
+	"plugin": null,
+	"build_config": {
+		"ignore": [
+			"tests",
+			"examples"
+		]
+	},
+	"configTemplate": {
+		"bot_token": {
+			"type": "string",
+			"description": "The secret token for your Telegram bot",
+			"default": null
+		}
+	},
+	"steamshipRegistry": {
+		"tagline": "Create your own Telegram Buddy with Langchain and Steamship.",
+		"tagline2": null,
+		"usefulFor": null,
+		"videoUrl": null,
+		"githubUrl": null,
+		"demoUrl": null,
+		"blogUrl": null,
+		"jupyterUrl": null,
+		"authorGithub": null,
+		"authorName": null,
+		"authorEmail": null,
+		"authorTwitter": null,
+		"authorUrl": null,
+		"tags": [
+			"Telegram",
+			"LangChain",
+			"GPT"
+		]
+	}
+}
