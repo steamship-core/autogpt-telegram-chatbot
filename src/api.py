@@ -43,6 +43,13 @@ class LangChainTelegramChatbot(PackageService):
             },
         )
 
+    @post("info")
+    def info(self) -> dict:
+        """Endpoint returning information about this bot."""
+        resp = requests.get(f"https://api.telegram.org/bot{self.config.bot_token}/getMe").json()
+        logging.info(f"/info: {resp}")
+        return {"telegram": resp.get("result")}
+
     @post("respond", public=True)
     def respond(self, update_id: int, message: dict) -> str:
         """Telegram webhook contract."""

@@ -1,11 +1,11 @@
 {
 	"type": "package",
-	"handle": "baby_agi",
-	"version": "0.0.5-rc.20",
+	"handle": "auto-gpt",
+	"version": "0.2.0",
 	"description": "Deploy your LangChain chatbots to Telegram.",
 	"author": "",
 	"entrypoint": "Unused",
-	"public": false,
+	"public": true,
 	"plugin": null,
 	"build_config": {
 		"ignore": [
