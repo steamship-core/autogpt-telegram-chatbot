@@ -9,6 +9,18 @@ These 3 steps should get you online. If not, shoot me a message on [Discord](htt
 
 Let's go: 
 
+<details open></summary>The no-coder way 😎</summary>
+
+  1. Go to https://www.steamship.com/build/auto-gpt 
+
+  2. Click **launch** 
+
+  3. Copy-paste your bot token and click create 🚀
+</details>
+
+
+<details open></summary>The coder way 💻</summary>
+
 1. **Step 1:** Edit the AutoGPT agent in `src/babyagi.py`. You can also use the vanilla babyagi in the file. 
 
 
@@ -16,3 +28,8 @@ Let's go:
 
 
 4. **Step 3:** Run `python deploy.py`. The script will ask you to copy-paste your bot token. Learn how to get a Telegram bot token [here](docs/register-telegram-bot.md).
+</details>
+
+The coder way
+
+
