@@ -13,11 +13,11 @@ Let's go:
 
 <details open><summary>The no-coder way 😎</summary>
 
-  1. Go to https://www.steamship.com/build/auto-gpt 
+  1. **Step 1:** Go to https://www.steamship.com/build/auto-gpt 
 
-  2. Click **launch** 
+  2. **Step 2:** Click **launch** 
 
-  3. Copy-paste your bot token and click create 🚀
+  3. **Step 3:** Copy-paste your bot token and click create 🚀
 </details>
 
 
