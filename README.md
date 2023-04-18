@@ -1,4 +1,4 @@
-# Tutorial: Deploy your own AutoGPT Discord bot
+# Tutorial: Deploy your own AutoGPT Telegram bot
 
 💛 Credits to [yoheinakajima](https://twitter.com/yoheinakajima) for bringing [babyagi](https://github.com/yoheinakajima/babyagi) to life.
 
