@@ -1,5 +1,7 @@
 # Tutorial: Deploy your own AutoGPT Discord bot
 
+💛 Cretits to [yoheinakajima](https://twitter.com/yoheinakajima) for bringing [babyagi](https://github.com/yoheinakajima/babyagi) to life.
+
 This project contains the necessary scaffolding to deploy your own AutoGPT/BabyAGI via LangChain agents with memory.
 
 These 3 steps should get you online. If not, shoot me a message on [Discord](https://steamship.com/discord). Happy to help you out. 
