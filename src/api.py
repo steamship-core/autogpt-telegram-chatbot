@@ -50,6 +50,15 @@ class LangChainTelegramChatbot(PackageService):
         logging.info(f"/info: {resp}")
         return {"telegram": resp.get("result")}
 
+    def _send_message(self, chat_id: str, message_text: str) -> None:
+        requests.get(
+            f"https://api.telegram.org/bot{self.config.bot_token}/sendMessage",
+            params={
+                "chat_id": chat_id,
+                "text": message_text,
+            },
+        )
+
     @post("respond", public=True)
     def respond(self, update_id: int, message: dict) -> str:
         """Telegram webhook contract."""
@@ -64,24 +73,18 @@ class LangChainTelegramChatbot(PackageService):
 
             record_response(self.client, chat_id, message_id)
 
-            requests.get(
-                f"https://api.telegram.org/bot{self.config.bot_token}/sendMessage",
-                params={
-                    "chat_id": chat_id,
-                    "text": f"Hey! I'm going to solve the objective {message_text}",
-                },
-            )
+            if message_text.startswith("/"):
+                self._send_message(chat_id, "Hey!")
+                self._send_message(chat_id, "Type an objective that you want me to solve.")
+                return "ok"
+
+            self._send_message(chat_id, f"Hey! I'm going to solve the objective {message_text}")
 
             for message in solve_agi_problem(self.client, message_text):
-                requests.get(
-                    f"https://api.telegram.org/bot{self.config.bot_token}/sendMessage",
-                    params={"chat_id": chat_id, "text": message},
-                )
+                self._send_message(chat_id, message)
+
         except Exception as e:
-            requests.get(
-                f"https://api.telegram.org/bot{self.config.bot_token}/sendMessage",
-                params={"chat_id": chat_id, "text": f"I'm sorry something went wrong, "
-                                                    f"here's the exception I received: {e}"},
-            )
+            self._send_message(chat_id, f"I'm sorry something went wrong, "
+                                        f"here's the exception I received: {e}")
 
         return "ok"
