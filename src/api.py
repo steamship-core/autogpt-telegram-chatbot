@@ -57,24 +57,31 @@ class LangChainTelegramChatbot(PackageService):
         chat_id = message["chat"]["id"]
         message_id = message["message_id"]
 
-        if already_responded(self.client, chat_id, message_id):
-            logging.info(f"Skip message {chat_id} {message_id}")
-            return "ok"
+        try:
+            if already_responded(self.client, chat_id, message_id):
+                logging.info(f"Skip message {chat_id} {message_id}")
+                return "ok"
 
-        record_response(self.client, chat_id, message_id)
+            record_response(self.client, chat_id, message_id)
 
-        requests.get(
-            f"https://api.telegram.org/bot{self.config.bot_token}/sendMessage",
-            params={
-                "chat_id": chat_id,
-                "text": f"Hey! I'm going to solve the objective {message_text}",
-            },
-        )
-
-        for message in solve_agi_problem(self.client, message_text):
             requests.get(
                 f"https://api.telegram.org/bot{self.config.bot_token}/sendMessage",
-                params={"chat_id": chat_id, "text": message},
+                params={
+                    "chat_id": chat_id,
+                    "text": f"Hey! I'm going to solve the objective {message_text}",
+                },
+            )
+
+            for message in solve_agi_problem(self.client, message_text):
+                requests.get(
+                    f"https://api.telegram.org/bot{self.config.bot_token}/sendMessage",
+                    params={"chat_id": chat_id, "text": message},
+                )
+        except Exception as e:
+            requests.get(
+                f"https://api.telegram.org/bot{self.config.bot_token}/sendMessage",
+                params={"chat_id": chat_id, "text": f"I'm sorry something went wrong, "
+                                                    f"here's the exception I received: {e}"},
             )
 
         return "ok"
