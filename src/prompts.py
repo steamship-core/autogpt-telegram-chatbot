@@ -4,11 +4,12 @@ from steamship_langchain import OpenAI
 from steamship_langchain.tools import SteamshipSERP
 
 
-def get_tools(client):
+def get_tools(client, **kwargs):
     todo_prompt = PromptTemplate.from_template(
         "You are a planner who is an expert at coming up with a todo list for a given objective. Come up with a todo list for this objective: {objective}"
     )
-    todo_chain = LLMChain(llm=OpenAI(client=client, temperature=0), prompt=todo_prompt)
+    max_tokens = kwargs.get("max_tokens", 256)
+    todo_chain = LLMChain(llm=OpenAI(client=client, temperature=0, max_tokens=max_tokens), prompt=todo_prompt)
     search = SteamshipSERP(client=client)
     return [
         Tool(
