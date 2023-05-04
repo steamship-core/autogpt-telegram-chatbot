@@ -2,7 +2,7 @@
 	"type": "package",
 	"handle": "auto-gpt",
 	"version": "0.8.0",
-	"description": "Deploy your LangChain chatbots to Telegram.",
+	"description": "Deploy an AutoGPT Telegram bot on Steamship.",
 	"author": "",
 	"entrypoint": "Unused",
 	"public": true,
@@ -18,10 +18,20 @@
 			"type": "string",
 			"description": "The secret token for your Telegram bot",
 			"default": null
+		},
+		"max_tokens": {
+			"type": "number",
+			"description": "Maximum number of tokens that should be returned by the LLM for each call. This controls the length of the text responses.",
+			"default": 256
+		},
+		"max_iterations": {
+			"type": "number",
+			"description": "Maximum number of steps AutoGPT should take before stopping. Must be between 0 and 10 (0 is interpreted to mean to run without limits).",
+			"default": 3
 		}
 	},
 	"steamshipRegistry": {
-		"tagline": "Create your own Telegram Buddy with Langchain and Steamship.",
+		"tagline": "Create your own Telegram Buddy running AutoGPT with Langchain and Steamship.",
 		"tagline2": null,
 		"usefulFor": null,
 		"videoUrl": null,
@@ -37,7 +47,9 @@
 		"tags": [
 			"Telegram",
 			"LangChain",
-			"GPT"
+			"GPT",
+			"Agents",
+			"AutoGPT"
 		]
 	}
 }

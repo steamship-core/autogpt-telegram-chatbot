@@ -15,6 +15,14 @@ class TelegramBuddyConfig(Config):
 
     bot_token: str = Field(description="The secret token for your Telegram bot")
 
+    max_tokens: int = Field(description="Maximum number of tokens that should be returned by the LLM for each call. "
+                                        "This controls the length of the text responses.",
+                            default=256, ge=1, le=4000)
+
+    max_iterations: int = Field(description="Maximum number of steps AutoGPT should take before stopping. "
+                                            "Must be between 0 and 10 (0 is interpreted to mean to run without limits).",
+                                default=3, ge=0, le=10)
+
 
 class LangChainTelegramChatbot(PackageService):
     """Deploy LangChain chatbots and connect them to Telegram."""
@@ -80,7 +88,7 @@ class LangChainTelegramChatbot(PackageService):
 
             self._send_message(chat_id, f"Hey! I'm going to solve the objective {message_text}")
 
-            for message in solve_agi_problem(self.client, message_text):
+            for message in solve_agi_problem(self.client, message_text, self.config.max_tokens, self.config.max_iterations):
                 self._send_message(chat_id, message)
 
         except Exception as e:

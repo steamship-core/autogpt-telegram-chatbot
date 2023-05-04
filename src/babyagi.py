@@ -137,7 +137,7 @@ class BabyAGI(Chain, BaseModel):
                 this_task_id = int(task["task_id"])
                 yield from self.print_task_result(result)
 
-                # Step 3: Store the result in Pinecone
+                # Step 3: Store the result in the VectorStore
                 result_id = f"result_{task['task_id']}"
                 self.vectorstore.add_texts(
                     texts=[result],
@@ -180,7 +180,7 @@ class BabyAGI(Chain, BaseModel):
         **kwargs,
     ) -> "BabyAGI":
         """Initialize the BabyAGI Controller."""
-        tools = get_tools(client)
+        tools = get_tools(client, **kwargs)
         prompt = get_prompt(tools)
         task_creation_chain = TaskCreationChain.from_llm(llm, verbose=verbose)
         task_prioritization_chain = TaskPrioritizationChain.from_llm(
@@ -201,9 +201,9 @@ class BabyAGI(Chain, BaseModel):
         )
 
 
-def solve_agi_problem(client, objective):
+def solve_agi_problem(client, objective, max_tokens, max_iterations):
 
-    llm = OpenAI(client=client, temperature=0)
+    llm = OpenAI(client=client, temperature=0, max_tokens=max_tokens)
     vectorstore = SteamshipVectorStore(
         client=client,
         index_name=f"{client.config.workspace_handle}_index_{hash(objective)}",
@@ -213,13 +213,14 @@ def solve_agi_problem(client, objective):
     # Logging of LLMChains
     verbose = True
     # If None, will keep on going forever
-    max_iterations: Optional[int] = 3
+    iterations: Optional[int] = max_iterations if max_iterations > 0 else None
     baby_agi = BabyAGI.from_llm(
         client=client,
         llm=llm,
         vectorstore=vectorstore,
         verbose=verbose,
-        max_iterations=max_iterations,
+        max_iterations=iterations,
+        max_tokens=max_tokens
     )
 
     yield from baby_agi._call({"objective": objective})
@@ -227,5 +228,5 @@ def solve_agi_problem(client, objective):
 
 if __name__ == "__main__":
     client = Steamship(workspace="agi_tools_pro")
-    for k in solve_agi_problem(client, "Write status report on Andrew Tate"):
+    for k in solve_agi_problem(client, "Write status report on Andrew Tate", 256, 3):
         print("HELLO", k)
