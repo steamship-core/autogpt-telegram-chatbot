@@ -8,7 +8,7 @@ from langchain.llms import BaseLLM
 from langchain.vectorstores import VectorStore
 from pydantic import BaseModel, Field
 from steamship import Steamship
-from steamship_langchain import OpenAI
+from steamship_langchain.llms import OpenAIChat
 from steamship_langchain.vectorstores import SteamshipVectorStore
 
 from chains import TaskCreationChain, TaskPrioritizationChain
@@ -201,9 +201,16 @@ class BabyAGI(Chain, BaseModel):
         )
 
 
-def solve_agi_problem(client, objective, max_tokens, max_iterations):
-
-    llm = OpenAI(client=client, temperature=0, max_tokens=max_tokens)
+def solve_agi_problem(
+    client,
+    objective,
+    model_name: str,
+    max_tokens: int,
+    max_iterations: Optional[int] = None,
+):
+    llm = OpenAIChat(
+        client=client, temperature=0, model_name=model_name, max_tokens=max_tokens
+    )
     vectorstore = SteamshipVectorStore(
         client=client,
         index_name=f"{client.config.workspace_handle}_index_{hash(objective)}",
@@ -217,10 +224,11 @@ def solve_agi_problem(client, objective, max_tokens, max_iterations):
     baby_agi = BabyAGI.from_llm(
         client=client,
         llm=llm,
+        model_name=model_name,
         vectorstore=vectorstore,
         verbose=verbose,
         max_iterations=iterations,
-        max_tokens=max_tokens
+        max_tokens=max_tokens,
     )
 
     yield from baby_agi._call({"objective": objective})
@@ -228,5 +236,11 @@ def solve_agi_problem(client, objective, max_tokens, max_iterations):
 
 if __name__ == "__main__":
     client = Steamship(workspace="agi_tools_pro")
-    for k in solve_agi_problem(client, "Write status report on Andrew Tate", 256, 3):
+    for k in solve_agi_problem(
+        client,
+        "Write status report on Andrew Tate",
+        max_tokens=256,
+        max_iterations=3,
+        model_name="gpt-3.5-turbo",
+    ):
         print("HELLO", k)

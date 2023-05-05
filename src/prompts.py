@@ -1,15 +1,22 @@
 from langchain import PromptTemplate, LLMChain
 from langchain.agents import ZeroShotAgent, Tool
-from steamship_langchain import OpenAI
+from steamship_langchain.llms import OpenAIChat
 from steamship_langchain.tools import SteamshipSERP
 
 
 def get_tools(client, **kwargs):
     todo_prompt = PromptTemplate.from_template(
-        "You are a planner who is an expert at coming up with a todo list for a given objective. Come up with a todo list for this objective: {objective}"
+        "You are a planner who is an expert at coming up with a todo list for a given objective. "
+        "Come up with a todo list for this objective: {objective}"
     )
     max_tokens = kwargs.get("max_tokens", 256)
-    todo_chain = LLMChain(llm=OpenAI(client=client, temperature=0, max_tokens=max_tokens), prompt=todo_prompt)
+    model_name = kwargs.get("model_name", "gpt-3.5-turbo")
+    todo_chain = LLMChain(
+        llm=OpenAIChat(
+            client=client, temperature=0, model_name=model_name, max_tokens=max_tokens
+        ),
+        prompt=todo_prompt,
+    )
     search = SteamshipSERP(client=client)
     return [
         Tool(
